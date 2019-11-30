@@ -29,7 +29,7 @@ class PackageGrabber:
 
         # Loop through dependencies and locate in database
         # print('Listing dependencies')
-        _packageLocations = {}
+        _packageList = []
         _dependencies = packageData['packageData']['dependencies']
         for dep in _dependencies:
             # print(dep['id'])
@@ -50,15 +50,25 @@ class PackageGrabber:
             _location = _location[0][0]
 
             # Insert into array
-            _packageLocations[dep['id']] = _location
+            # Package information nicely
+            _depData = {
+                'id': dep['id'],
+                'version': dep['version'],
+                'fetchLocation': _location,
+                'unpackLocation': dep['unpack-location']
+            }
 
-        return _packageLocations
+            # Add to list
+            _packageList.append(_depData)
 
-    def doBundle(self, dependenciesData):
+        return _packageList
+
+    def doBundle(self, dependencies):
         print('bundling...')
+        # print(dependencies)
         
-        for id, location in dependenciesData.items():
-            print("({0}) Searching file system for {1}".format(id, location))
+        for dep in dependencies:
+            print("({0} v{1}) Searching file system for folder {2}. Will extract to {3}".format(dep['id'], dep['version'], dep['fetchLocation'], dep['unpackLocation']))
 
     # Find a requested package11
     def findPackage(self, pck_id, pck_ver=None):
