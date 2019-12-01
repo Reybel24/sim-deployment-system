@@ -1,5 +1,8 @@
 import json
 import mysql.connector
+import zipfile
+import os
+import shutil, errno
 
 
 class PackageGrabber:
@@ -66,9 +69,37 @@ class PackageGrabber:
     def doBundle(self, dependencies):
         print('bundling...')
         # print(dependencies)
+
+        # Stage directory
+        _stageDir = 'stage/'
         
+        # Delete if it already exists
+        if (os.path.isdir(_stageDir)):
+            shutil.rmtree(_stageDir)
+
+        # Create stage
+        os.mkdir(_stageDir)
+        
+        # Copy over packages
         for dep in dependencies:
-            print("({0} v{1}) Searching file system for folder {2}. Will extract to {3}".format(dep['id'], dep['version'], dep['fetchLocation'], dep['unpackLocation']))
+            # print("({0} v{1}) Searching file system for folder {2}. Will extract to {3}".format(dep['id'], dep['version'], dep['fetchLocation'], dep['unpackLocation']))
+            
+            # Make sure folder exists in packages folder
+            _pckgName = str(dep['id']) + '_v' + str(dep['version'])
+            _pckgPath = os.path.join('packages', _pckgName)
+            if (os.path.isdir(_pckgPath)):
+                # Copy folder onto stage
+                shutil.copytree(_pckgPath, os.path.join(_stageDir, _pckgName))
+            else:
+                print('Package folder {0} does not exist within the package directory! Skipping it...'.format(_pckgName))
+
+        # Zip all folders inside stage and prepare for transport
+        _dest = 'bin/'
+        # Make sure directory exists. If not, create it
+        if (os.path.isdir(_dest) == False):
+            os.mkdir(_dest)
+
+        shutil.make_archive(_dest + 'bundle', 'zip', _stageDir)
 
     # Find a requested package11
     def findPackage(self, pck_id, pck_ver=None):
@@ -145,4 +176,4 @@ class PackageGrabber:
 
 # Pass in a package ID to grab. Leave empty to grab latest version.
 pck = PackageGrabber()
-pck.findPackage('front-end', 1.10)
+pck.findPackage('front-end', 1.1)
