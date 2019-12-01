@@ -1,26 +1,26 @@
 {
     "front-end": [
         {
-            "version": 1.10,
+            "version": 1.1,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 1.10,
+                    "version": 1.1,
                     "unpack-location": "/desktop/"
                 },
                 {
                     "id": "web-back-end",
-                    "version": 1.40,
+                    "version": 1.4,
                     "unpack-location": "/app/simvestor/"
                 }
             ]
         },
         {
-            "version": 1.40,
+            "version": 1.4,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 2.20,
+                    "version": 2.2,
                     "unpack-location": "/desktop/"
                 },
                 {
@@ -31,31 +31,31 @@
             ]
         },
         {
-            "version": 1.50,
+            "version": 1.5,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 2.20,
+                    "version": 2.2,
                     "unpack-location": "/desktop/"
                 },
                 {
                     "id": "web-back-end",
-                    "version": 1.90,
+                    "version": 1.9,
                     "unpack-location": "/var/apache/htdocs/sim/back-end/"
                 }
             ]
         },
         {
-            "version": 2.0,
+            "version": 2,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 2.20,
+                    "version": 2.2,
                     "unpack-location": "/desktop/"
                 },
                 {
                     "id": "web-back-end",
-                    "version": 1.90,
+                    "version": 1.9,
                     "unpack-location": "/var/apache/htdocs/sim/back-end/"
                 }
             ]
@@ -63,11 +63,11 @@
     ],
     "back-end": [
         {
-            "version": 1.10,
+            "version": 1.1,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 1.10,
+                    "version": 1.1,
                     "unpack-location": "/desktop/"
                 },
                 {
@@ -78,16 +78,16 @@
             ]
         },
         {
-            "version": 1.40,
+            "version": 1.4,
             "dependencies": [
                 {
                     "id": "vue-front-end",
-                    "version": 2.20,
+                    "version": 2.2,
                     "unpack-location": "/desktop/"
                 },
                 {
                     "id": "web-back-end",
-                    "version": 1.90,
+                    "version": 1.9,
                     "unpack-location": "/var/apache/htdocs/sim/back-end/"
                 }
             ]
