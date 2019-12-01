@@ -1,2 +1,3 @@
 # Ignore files created by bundler
 stage/
+bin/
