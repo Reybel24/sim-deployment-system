@@ -10,10 +10,31 @@ class PackageGrabber:
     global fileDirectory
     fileDirectory = 'package-directory.json'
 
+    # Environment (0 for development, 1 for production)
+    global env
+    env = 0
+
     def __init__(self):
         pass
 
-     # Create a metadata snippet for a single package piece
+    def createMockDatabase(self):
+        _db = [
+            {
+                "id": "vue-front-end",
+                "version": 1.1,
+                "location": "packages/vue-front-end_v1.1/",
+                "health": 1
+            },
+            {
+                "id": "web-back-end",
+                "version": 1.4,
+                "location": "packages/web-back-end_v1.4/",
+                "health": 1
+            },
+        ]
+        return _db
+
+    # Create a metadata snippet for a single package piece
     def createMeta(self, pckg_id, pckg_version, pckg_folderName, pckg_unpackTo):
         # print("creating metadata...")
         _meta = {
@@ -31,51 +52,90 @@ class PackageGrabber:
               str(packageData['packageVersion']))
         # print(packageData['packageData'])
 
-        # Connect to database
-        db = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            passwd='',
-            database='deployment'
-        )
-        # print(db)
-        dbCursor = db.cursor()
-
-        # Loop through dependencies and locate in database
         # print('Listing dependencies')
         _packageList = []
         _dependencies = packageData['packageData']['dependencies']
-        for dep in _dependencies:
-            # print(dep['id'])
 
-            # Prepare and execute select statement
-            _sql = """SELECT location FROM packages WHERE id = '%s'"""%(dep['id'])
-            dbCursor.execute(_sql)
+        # Dev, prod
+        if (env == 1):
+            # Connect to database
+            db = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                passwd='',
+                database='deployment'
+            )
+            # print(db)
+            dbCursor = db.cursor()
 
-            # Get results
-            _location = dbCursor.fetchall()
+            # Loop through dependencies and locate in database
+            for dep in _dependencies:
+                # print(dep['id'])
 
-            # Empty result set?
-            if (dbCursor.rowcount == 0):
-                print('Dependency ({0}) missing from database...'.format(dep['id']))
-                continue
+                # Prepare and execute select statement
+                _sql = """SELECT location FROM packages WHERE id = '%s'"""%(dep['id'])
+                dbCursor.execute(_sql)
 
-            # Grab first result
-            _location = _location[0][0]
+                # Get results
+                _location = dbCursor.fetchall()
 
-            # Insert into array
-            # Package information nicely
-            _depData = {
-                'id': dep['id'],
-                'version': dep['version'],
-                'fetchLocation': _location,
-                'unpackLocation': dep['unpackLocation']
-            }
+                # Empty result set?
+                if (dbCursor.rowcount == 0):
+                    print('Dependency ({0}) missing from database...'.format(dep['id']))
+                    continue
 
-            # Add to list
-            _packageList.append(_depData)
+                # Grab first result
+                _location = _location[0][0]
 
-        return _packageList
+                # Insert into array
+                # Package information nicely
+                _depData = {
+                    'id': dep['id'],
+                    'version': dep['version'],
+                    'fetchLocation': _location,
+                    'unpackLocation': dep['unpackLocation']
+                }
+
+                # Add to list
+                _packageList.append(_depData)
+
+            return _packageList
+        else:
+            print("Env is dev. Using mock database.")
+            # Create and use mock database
+            _mockDB = self.createMockDatabase()
+
+            # Loop through dependencies and locate in database
+            for dep in _dependencies:
+                # print(dep['id'])
+
+                # Get dependency location
+                _location = ''
+                for entry in _mockDB:
+                    if (entry['id'] == dep['id']):
+                        # Found
+                        _location = entry['location']
+                        # print('found location...{0}'.format(_location))
+                        break
+
+                # Dependency not found?
+                if (_location == ''):
+                    print('Dependency ({0}) missing from database...'.format(dep['id']))
+                    continue
+
+                # Insert into array
+                # Package information nicely
+                _depData = {
+                    'id': dep['id'],
+                    'version': dep['version'],
+                    'fetchLocation': _location,
+                    'unpackLocation': dep['unpackLocation']
+                }
+
+                # Add to list
+                _packageList.append(_depData)
+
+            return _packageList
 
     def doBundle(self, dependencies):
         print('bundling...')
@@ -100,7 +160,7 @@ class PackageGrabber:
             
             # Make sure folder exists in packages folder
             _pckgName = str(dep['id']) + '_v' + str(dep['version'])
-            _pckgPath = os.path.join('packages', _pckgName)
+            _pckgPath = dep['fetchLocation']
             if (os.path.isdir(_pckgPath)):
                 # Copy folder onto stage
                 shutil.copytree(_pckgPath, os.path.join(_stageDir, _pckgName))
@@ -126,8 +186,7 @@ class PackageGrabber:
         # Clean up
         shutil.rmtree(_stageDir)
 
-
-    # Find a requested package11
+    # Find a requested package
     def findPackage(self, pck_id, pck_ver=None):
         # print("Looking for package by ID: {0} v{1}".format(pck_id, pck_ver))
 
@@ -198,7 +257,6 @@ class PackageGrabber:
             # Pass into bundler script here
             # Bundler will use locations to grab dependencies and get them ready for transport
             self.doBundle(_dependenciesData)
-
 
 # Pass in a package ID to grab. Leave empty to grab latest version.
 pck = PackageGrabber()
