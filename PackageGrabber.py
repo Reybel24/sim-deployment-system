@@ -13,6 +13,17 @@ class PackageGrabber:
     def __init__(self):
         pass
 
+     # Create a metadata snippet for a single package piece
+    def createMeta(self, pckg_id, pckg_version, pckg_folderName, pckg_unpackTo):
+        # print("creating metadata...")
+        _meta = {
+            "package": pckg_id,
+            "version": pckg_version,
+            "folderName": pckg_folderName,
+            "unpackTo": pckg_unpackTo
+        }
+        return _meta
+
     # Grab dependencies after finding package
     def grabDependencyLocations(self, packageData):
         # Print package
@@ -58,7 +69,7 @@ class PackageGrabber:
                 'id': dep['id'],
                 'version': dep['version'],
                 'fetchLocation': _location,
-                'unpackLocation': dep['unpack-location']
+                'unpackLocation': dep['unpackLocation']
             }
 
             # Add to list
@@ -79,6 +90,9 @@ class PackageGrabber:
 
         # Create stage
         os.mkdir(_stageDir)
+
+        # Packages metadata
+        _pckgMeta = []
         
         # Copy over packages
         for dep in dependencies:
@@ -90,16 +104,25 @@ class PackageGrabber:
             if (os.path.isdir(_pckgPath)):
                 # Copy folder onto stage
                 shutil.copytree(_pckgPath, os.path.join(_stageDir, _pckgName))
+
+                # Metadata
+                _pckgMeta.append(self.createMeta(dep['id'], dep['version'], _pckgName, dep['unpackLocation']))
             else:
                 print('Package folder {0} does not exist within the package directory! Skipping it...'.format(_pckgName))
 
-        # Zip all folders inside stage and prepare for transport
+        # Add bundle metadata to file
+        with open('stage/sim-meta.json', 'w') as json_file:
+            json.dump(_pckgMeta, json_file, indent=4, sort_keys=False)
+
+        # Prepare for bundling
         _dest = 'bin/'
         # Make sure directory exists. If not, create it
         if (os.path.isdir(_dest) == False):
             os.mkdir(_dest)
 
+        # Bundle (zip, tar)
         shutil.make_archive(_dest + 'bundle', 'zip', _stageDir)
+
 
     # Find a requested package11
     def findPackage(self, pck_id, pck_ver=None):
