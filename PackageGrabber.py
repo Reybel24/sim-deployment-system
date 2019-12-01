@@ -123,6 +123,9 @@ class PackageGrabber:
         # Bundle (zip, tar)
         shutil.make_archive(_dest + 'bundle', 'zip', _stageDir)
 
+        # Clean up
+        shutil.rmtree(_stageDir)
+
 
     # Find a requested package11
     def findPackage(self, pck_id, pck_ver=None):
