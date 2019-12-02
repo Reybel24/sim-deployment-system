@@ -1,2 +1,4 @@
 # Ignore vue modules
-modules/
+modules
+tests
+etc

@@ -3,6 +3,7 @@ import mysql.connector
 import zipfile
 import os
 import shutil, errno
+import fnmatch
 
 
 class PackageGrabber:
@@ -137,6 +138,15 @@ class PackageGrabber:
 
             return _packageList
 
+    # Used as copytree() ignore parameter to exlude files and directories
+    def ignore_patterns(self, patterns):
+        def _ignore_patterns(path, names):
+            ignored_names = []
+            for pattern in patterns:
+                ignored_names.extend(fnmatch.filter(names, pattern))
+            return set(ignored_names)
+        return _ignore_patterns
+        
     def doBundle(self, dependencies):
         print('bundling...')
         # print(dependencies)
@@ -157,13 +167,35 @@ class PackageGrabber:
         # Copy over packages
         for dep in dependencies:
             # print("({0} v{1}) Searching file system for folder {2}. Will extract to {3}".format(dep['id'], dep['version'], dep['fetchLocation'], dep['unpackLocation']))
-            
+
             # Make sure folder exists in packages folder
             _pckgName = str(dep['id']) + '_v' + str(dep['version'])
             _pckgPath = dep['fetchLocation']
             if (os.path.isdir(_pckgPath)):
+                # Does this directory contain a .sim-ignore file? If so, get list of files to be ignored when copying
+                _ignoreFiles = []
+                _simignorePath = _pckgPath + ".simignore"
+                if (os.path.isfile(_simignorePath)):
+                    # Read .simignore to get files to be ignored
+                    with open(_simignorePath) as _simignore:
+                        _line = _simignore.readline()
+                        cnt = 1
+
+                        while _line:
+                            if (_line.strip()[0] == '#'):
+                                # This is a commented line. Ignore it.
+                                # print('Found comment: ' + _line)
+                                pass
+                            else:
+                                # Add file or dir to list of ignored
+                                _ignoreFiles.append(_line.strip())
+                                # print("ignoring {}".format(_line))
+
+                            _line = _simignore.readline()
+                            cnt += 1
+
                 # Copy folder onto stage
-                shutil.copytree(_pckgPath, os.path.join(_stageDir, _pckgName))
+                shutil.copytree(_pckgPath, os.path.join(_stageDir, _pckgName), ignore=self.ignore_patterns(_ignoreFiles))
 
                 # Metadata
                 _pckgMeta.append(self.createMeta(dep['id'], dep['version'], _pckgName, dep['unpackLocation']))
@@ -261,3 +293,4 @@ class PackageGrabber:
 # Pass in a package ID to grab. Leave empty to grab latest version.
 pck = PackageGrabber()
 pck.findPackage('front-end', 1.1)
+print('Done. Look inside bin/')
