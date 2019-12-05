@@ -1,9 +1,11 @@
+#!/usr/bin/env python
 import json
 import mysql.connector
 import zipfile
 import os
 import shutil, errno
 import fnmatch
+import pika
 
 
 class PackageGrabber:
@@ -290,7 +292,47 @@ class PackageGrabber:
             # Bundler will use locations to grab dependencies and get them ready for transport
             self.doBundle(_dependenciesData)
 
-# Pass in a package ID to grab. Leave empty to grab latest version.
 pck = PackageGrabber()
-pck.findPackage('front-end', 1.1)
-print('Done. Look inside bin/')
+
+# Rabbit host
+rabbitHost = 'localhost'
+
+# Create connection
+connection = pika.BlockingConnection(
+    pika.ConnectionParameters(host=rabbitHost))
+channel = connection.channel()
+
+channel.queue_declare(queue='dep')
+
+# Message handler
+def callback(ch, method, properties, body):
+    # print(" [x] Received %r" % json.loads(body))
+
+    # Get payload
+    _payload = json.loads(body)
+    _pckgName = _payload['packageName']
+    _pckgVersion = _payload['packageVersion']
+
+    # Test print
+    print('Looking for ' + str(_pckgName) + ' and ' + str(_pckgVersion))
+
+    # Look for package
+    pck.findPackage(_pckgName, _pckgVersion)
+
+    # Done message
+    print('Done. Look inside bin/')
+
+# Run callback on message consume
+channel.basic_consume(
+    queue='dep', on_message_callback=callback, auto_ack=True)
+
+print(' [*] Waiting for messages. To exit press CTRL+C')
+
+# Listen
+channel.start_consuming()
+
+
+# Pass in a package ID to grab. Leave empty to grab latest version.
+# pck = PackageGrabber()
+# pck.findPackage('front-end', 1.1)
+# print('Done. Look inside bin/')
