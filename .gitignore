@@ -1,3 +1,4 @@
 # Ignore files created by bundler
 stage/
 bin/
+__pycache__/
