@@ -6,6 +6,8 @@ import os
 import shutil, errno
 import fnmatch
 import pika
+from RabbitConn import RabbitConn
+import pexpect
 
 
 class PackageGrabber:
@@ -294,12 +296,10 @@ class PackageGrabber:
 
 pck = PackageGrabber()
 
-# Rabbit host
-rabbitHost = 'localhost'
+# Rabbit conneciton parameters
+rabbit_conn = RabbitConn()
+connection = pika.BlockingConnection(rabbit_conn.connectionParams)
 
-# Create connection
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=rabbitHost))
 channel = connection.channel()
 
 channel.queue_declare(queue='dep')
@@ -312,12 +312,36 @@ def callback(ch, method, properties, body):
     _payload = json.loads(body)
     _pckgName = _payload['packageName']
     _pckgVersion = _payload['packageVersion']
+    _requestorID = _payload['requestorID']
 
     # Test print
     print('Looking for ' + str(_pckgName) + ' and ' + str(_pckgVersion))
 
     # Look for package
     pck.findPackage(_pckgName, _pckgVersion)
+
+    # Send package using .exp script
+    # os.system('ls')
+    _wd = os.getcwd()
+    _file = os.path.join(_wd, 'sendPackage.exp')
+    # print(_file)
+
+    # Get sender info
+    with open('manifest.json') as f:
+        _manifest = json.load(f)
+
+    _senderIP = ''
+    _senderPassword = ''
+    for person in _manifest:
+        # print('Checking person ' + person['id'])
+        if person['id'] == _requestorID:
+            print('Sending package to ' + person['id'])
+            _senderIP = person['ip']
+            _senderPassword = person['password']
+            break
+
+
+    os.system(_file + ' ' + _requestorID + ' ' + _senderIP + ' ' + _senderPassword + ' bin/bundle.zip')
 
     # Done message
     print('Done. Look inside bin/')
