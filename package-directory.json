@@ -6,12 +6,12 @@
                 {
                     "id": "vue-front-end",
                     "version": 1.1,
-                    "unpackLocation": "/desktop/"
+                    "unpackLocation": "/home/user/Desktop/"
                 },
                 {
                     "id": "web-back-end",
                     "version": 1.4,
-                    "unpackLocation": "/app/simvestor/"
+                    "unpackLocation": "/home/user/Desktop/app/simvestor/"
                 }
             ]
         },
@@ -21,12 +21,12 @@
                 {
                     "id": "vue-front-end",
                     "version": 2.2,
-                    "unpackLocation": "/desktop/"
+                    "unpackLocation": "/home/rey/Desktop/front-end/"
                 },
                 {
                     "id": "web-back-end",
                     "version": 1.9,
-                    "unpackLocation": "/var/apache/htdocs/sim/back-end/"
+                    "unpackLocation": "/home/rey/Desktop/back-end/"
                 }
             ]
         },
@@ -51,7 +51,7 @@
                 {
                     "id": "vue-front-end",
                     "version": 2.2,
-                    "unpackLocation": "/desktop/"
+                    "unpackLocation": "/home/rey/Desktop"
                 },
                 {
                     "id": "web-back-end",

@@ -7,7 +7,6 @@ import shutil, errno
 import fnmatch
 import pika
 from RabbitConn import RabbitConn
-import pexpect
 
 
 class PackageGrabber:
@@ -321,7 +320,6 @@ def callback(ch, method, properties, body):
     pck.findPackage(_pckgName, _pckgVersion)
 
     # Send package using .exp script
-    # os.system('ls')
     _wd = os.getcwd()
     _file = os.path.join(_wd, 'sendPackage.exp')
     # print(_file)
@@ -339,7 +337,6 @@ def callback(ch, method, properties, body):
             _senderIP = person['ip']
             _senderPassword = person['password']
             break
-
 
     os.system(_file + ' ' + _requestorID + ' ' + _senderIP + ' ' + _senderPassword + ' bin/bundle.zip')
 

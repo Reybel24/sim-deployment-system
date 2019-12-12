@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import pika, json, sys
+import pika, json, sys, os
 from RabbitConn import RabbitConn
 
 def requestPackage(pckgName, pckgVersion, requestorID):
@@ -24,6 +24,11 @@ def requestPackage(pckgName, pckgVersion, requestorID):
 
     # Close the connection once the data is sent.
     connection.close()
+
+    # Install package
+    _wd = os.getcwd()
+    _file = os.path.join(_wd, 'installer.sh')
+    os.system(_file + ' /home/rey/Desktop/bundle.zip')
 
 # Take command line arguments
 if ((len(sys.argv) - 1) == 3):

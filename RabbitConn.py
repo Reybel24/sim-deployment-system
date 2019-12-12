@@ -2,7 +2,7 @@ import pika
 
 class RabbitConn():
     # Define rabbit connection parameters
-    host = '192.168.0.130'
+    host = 'localhost'
     port = 5672
     credentials = pika.PlainCredentials('admin', 'password')
     connectionParams = pika.ConnectionParameters(host, port, '/', credentials)
