@@ -4,6 +4,7 @@
 import pika, json, sys
 from RabbitConn import RabbitConn
 import install
+import time
 
 def requestPackage(pckgName, pckgVersion, requestorID):
     # Rabbit connection info
@@ -27,6 +28,9 @@ def requestPackage(pckgName, pckgVersion, requestorID):
 
     # Close the connection once the data is sent.
     connection.close()
+
+    # Wait
+    time.sleep(4)
     
     # Install recieved package
     install.installBundle()
