@@ -1,0 +1,11 @@
+[Unit]
+Description=front end server
+Requires=network-online.target
+After=network-online.target
+After=network.target
+
+[Service]
+ExecStart=/home/tricia/git/simv-deployment-system/npm-run.sh
+
+[Install]
+WantedBy=multi-user.target
