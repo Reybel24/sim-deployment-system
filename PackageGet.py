@@ -3,6 +3,7 @@
 
 import pika, json, sys
 from RabbitConn import RabbitConn
+import install
 
 def requestPackage(pckgName, pckgVersion, requestorID):
     # Rabbit connection info
@@ -27,6 +28,8 @@ def requestPackage(pckgName, pckgVersion, requestorID):
     # Close the connection once the data is sent.
     connection.close()
     
+    # Install recieved package
+    install.installBundle()
 
 # Take command line arguments
 if ((len(sys.argv) - 1) == 3):
