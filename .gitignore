@@ -1,4 +1,7 @@
 # Ignore files created by bundler
 stage/
 bin/
+recieved/bundle.zip
+recieved/temp
+env/
 __pycache__/

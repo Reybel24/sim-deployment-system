@@ -5,9 +5,9 @@ import json
 
 # Unzip to temp location
 def installBundle():
-    print('Unpacking bundle...')
     _recievedLocation = 'recieved/'
     if (os.path.exists(_recievedLocation + 'bundle.zip')):
+        print('Unpacking bundle...')
         # Unpack to temporary location
         tempLocation = 'recieved/temp'
         shutil.unpack_archive('recieved/bundle.zip', tempLocation, 'zip')
