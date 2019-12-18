@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Invoke this from command line to retrieve a package
+
 import pika, json, sys
 from RabbitConn import RabbitConn
 
@@ -24,6 +26,7 @@ def requestPackage(pckgName, pckgVersion, requestorID):
 
     # Close the connection once the data is sent.
     connection.close()
+    
 
 # Take command line arguments
 if ((len(sys.argv) - 1) == 3):
@@ -33,4 +36,4 @@ if ((len(sys.argv) - 1) == 3):
     print('Requesting: {0}, v{1} for user {2}'.format(_pckgName, _pckgVersion, _requestorID))
     requestPackage(_pckgName, _pckgVersion, _requestorID)
 else:
-    print('Invalid parameters. Please provide the package name and version as such: front-end 1.4')
+    print('Invalid parameters. Please provide the package name, version, and destination as such: front-end 1.4 fe_qa')

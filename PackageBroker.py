@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Run this and leave running on deployment machine
 import json
 import mysql.connector
 import zipfile
@@ -10,7 +11,7 @@ from RabbitConn import RabbitConn
 import pexpect
 
 
-class PackageGrabber:
+class PackageBroker:
     # package-directory location
     global fileDirectory
     fileDirectory = 'package-directory.json'
@@ -294,7 +295,7 @@ class PackageGrabber:
             # Bundler will use locations to grab dependencies and get them ready for transport
             self.doBundle(_dependenciesData)
 
-pck = PackageGrabber()
+pck = PackageBroker()
 
 # Rabbit conneciton parameters
 rabbit_conn = RabbitConn()
