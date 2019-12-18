@@ -302,6 +302,7 @@ connection = pika.BlockingConnection(rabbit_conn.connectionParams)
 channel = connection.channel()
 
 channel.queue_declare(queue='dep')
+channel.queue_declare(queue='publish')
 
 # Message handler
 def callbackRequest(ch, method, properties, body):
@@ -348,6 +349,9 @@ def callbackRequest(ch, method, properties, body):
 
 def callbackPublish(ch, method, properties, body):
     print('Recieved request to publish package')
+    # Get payload
+    _payload = json.loads(body)
+    print(_payload)
 
 # Run callback on message consume
 channel.basic_consume(

@@ -27,6 +27,6 @@ def send(hostID, fileToSend):
     if (_hostFound):
         # Execute script
         print('Sending now to ' + hostID + ' (' + fileToSend + ')')
-        # os.system(_file + ' ' + hostID + ' ' + _senderIP + ' ' + _senderPassword + ' ' + fileToSend)
+        os.system(_file + ' ' + hostID + ' ' + _senderIP + ' ' + _senderPassword + ' ' + fileToSend)
     else:
         print("Machine not found (Did you forget to add it to the manifest?): " + hostID)

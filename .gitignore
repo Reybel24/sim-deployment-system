@@ -5,3 +5,5 @@ recieved/bundle.zip
 recieved/temp
 env/
 __pycache__/
+python3vm/
+publish/

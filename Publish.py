@@ -18,7 +18,7 @@ def doPublish():
     shutil.make_archive(_dest + 'publish', 'zip', _working)
 
     # Send to QA
-    # Send.send('QA', 'publish/publish.zip')
+    Send.send('QA', 'publish/publish.zip')
 
     _path = os.path.join(_working, 'vue-front-end', 'sim-config.json')
     with open(_path) as f:
