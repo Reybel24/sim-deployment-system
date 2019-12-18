@@ -6,7 +6,7 @@ After=network.target
 After=rabbitmq-server.service
 
 [Service]
-ExecStart=/usr/bin/php /home/tricia/git/simvest/back-end/retrieveLog.php
+ExecStart=/usr/bin/php /home/tricia/git/simvest/back-end/logServer.php
 
 [Install]
 WantedBy=multi-user.target
