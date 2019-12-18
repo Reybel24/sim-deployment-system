@@ -1,14 +1,12 @@
 [Unit]
-Description=back end server file
+Description=rmq log server
 Requires=network-online.target
-Requires=mysql.service
-Requires=rabbitmq-server.service
 After=network-online.target
 After=network.target
 After=rabbitmq-server.service
 
 [Service]
-ExecStart=/home/tricia/script.sh
+ExecStart=/usr/bin/php /home/tricia/git/simvest/back-end/retrieveLog.php
 
 [Install]
 WantedBy=multi-user.target
