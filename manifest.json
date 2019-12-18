@@ -13,5 +13,10 @@
         "id": "taj",
         "password": "Tajprice123",
         "ip": "25.50.106.237"
+    },
+    {
+        "id": "QA",
+        "password": "qa",
+        "ip": "xx.xx.xxx.xxx"
     }
 ]

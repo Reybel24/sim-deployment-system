@@ -6,7 +6,7 @@ set pass [lindex $argv 2]
 set file [lindex $argv 3]
 
 
-spawn scp $file $host@$ip:/home/$host/Desktop
+spawn scp $file $host@$ip:/home/$host/Desktop/sim-deployment-system/recieved
 
 expect "*password*" {send "$pass\r"}
 

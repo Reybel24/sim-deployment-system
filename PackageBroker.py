@@ -8,8 +8,6 @@ import shutil, errno
 import fnmatch
 import pika
 from RabbitConn import RabbitConn
-import pexpect
-
 
 class PackageBroker:
     # package-directory location
@@ -306,8 +304,9 @@ channel = connection.channel()
 channel.queue_declare(queue='dep')
 
 # Message handler
-def callback(ch, method, properties, body):
+def callbackRequest(ch, method, properties, body):
     # print(" [x] Received %r" % json.loads(body))
+    print('Recieved package request')
 
     # Get payload
     _payload = json.loads(body)
@@ -347,9 +346,16 @@ def callback(ch, method, properties, body):
     # Done message
     print('Done. Look inside bin/')
 
+def callbackPublish(ch, method, properties, body):
+    print('Recieved request to publish package')
+
 # Run callback on message consume
 channel.basic_consume(
-    queue='dep', on_message_callback=callback, auto_ack=True)
+    queue='dep', on_message_callback=callbackRequest, auto_ack=True)
+
+ # Run callback on message consume
+channel.basic_consume(
+    queue='publish', on_message_callback=callbackPublish, auto_ack=True)
 
 print(' [*] Waiting for messages. To exit press CTRL+C')
 
