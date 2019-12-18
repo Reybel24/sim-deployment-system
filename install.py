@@ -4,7 +4,7 @@ import os.path
 import json
 
 # Unzip to temp location
-def install():
+def installBundle():
     print('Unpacking bundle...')
     _recievedLocation = 'recieved/'
     if (os.path.exists(_recievedLocation + 'bundle.zip')):
@@ -31,4 +31,4 @@ def install():
 
 
 # Run on command
-install()
+installBundle()
