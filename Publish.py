@@ -20,11 +20,6 @@ def doPublish():
     # Send to QA
     Send.send('QA', 'publish/publish.zip')
 
-    _path = os.path.join(_working, 'vue-front-end', 'sim-config.json')
-    with open(_path) as f:
-        _data = json.load(f)
-    # print(_data)
-
     # Create bundle meta
     _meta = []
     for item in os.listdir(_working):
