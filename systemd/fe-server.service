@@ -5,7 +5,7 @@ After=network-online.target
 After=network.target
 
 [Service]
-ExecStart=/home/tricia/git/simv-deployment-system/npm-run.sh
+ExecStart=/home/reybel/Desktop/Git/sim-deployment-system/npm-run.sh
 
 [Install]
 WantedBy=multi-user.target

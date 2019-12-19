@@ -1,0 +1,14 @@
+[Unit]
+Description=launch deploy server
+Requires=network-online.target
+Requires=mysql.service
+Requires=rabbitmq-server.service
+After=network-online.target
+After=network.target
+After=rabbitmq-server.service
+
+[Service]
+ExecStart=/usr/bin/python /usr/bin/pip3 /home/rey/Desktop/Git/sim-deployment-system/PackageBroker.py
+
+[Install]
+WantedBy=multi-user.target

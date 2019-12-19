@@ -18,7 +18,7 @@ def doPublish():
     shutil.make_archive(_dest + 'publish', 'zip', _working)
 
     # Send to QA
-    Send.send('QA', 'publish/publish.zip')
+    Send.send('mb', 'publish/publish.zip')
 
     # Create bundle meta
     _meta = []
