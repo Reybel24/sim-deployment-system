@@ -1,0 +1,14 @@
+[
+    {
+        "unpackTo": "/desktop/", 
+        "version": 2.2, 
+        "folderName": "vue-front-end_v2.2", 
+        "package": "vue-front-end"
+    }, 
+    {
+        "unpackTo": "/var/apache/htdocs/sim/back-end/", 
+        "version": 1.9, 
+        "folderName": "web-back-end_v1.9", 
+        "package": "web-back-end"
+    }
+]

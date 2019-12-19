@@ -1,0 +1,4 @@
+# Ignore vue modules
+modules
+tests
+etc
