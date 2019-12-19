@@ -3,7 +3,7 @@
 
 import pika, json, sys
 from RabbitConn import RabbitConn
-import install
+import siminstall
 import time
 
 def requestPackage(pckgName, pckgVersion, requestorID):
@@ -30,10 +30,11 @@ def requestPackage(pckgName, pckgVersion, requestorID):
     connection.close()
 
     # Wait
+    print('One sec...')
     time.sleep(4)
     
     # Install recieved package
-    install.installBundle()
+    siminstall.installBundle()
 
 # Take command line arguments
 if ((len(sys.argv) - 1) == 3):
